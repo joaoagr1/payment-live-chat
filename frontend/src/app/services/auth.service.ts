@@ -51,8 +51,18 @@ export class AuthService {
   }
 
   async syncUserToBackend(): Promise<void> {
+    console.log('Syncing user to backend...');
     try {
       const token = this.getToken();
+
+      // Debug: Log token payload to see what claims Keycloak is sending
+      if (token) {
+        const payload = JSON.parse(atob(token.split('.')[1]));
+        console.log('JWT Token payload from Keycloak:', payload);
+        console.log('Username from token:', payload.preferred_username || payload.username || payload.sub);
+        console.log('Email from token:', payload.email);
+      }
+
       const headers = new HttpHeaders({
         'Authorization': `Bearer ${token}`,
         'Content-Type': 'application/json'

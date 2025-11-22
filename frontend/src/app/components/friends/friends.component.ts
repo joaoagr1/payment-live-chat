@@ -32,9 +32,6 @@ export class FriendsComponent implements OnInit {
   async ngOnInit(): Promise<void> {
     this.currentUsername = this.authService.getUsername();
 
-    // Sync current user to database
-    await this.authService.syncUserToBackend();
-
     this.loadFriends();
     this.loadPendingRequests();
   }

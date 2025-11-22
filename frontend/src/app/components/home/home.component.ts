@@ -236,9 +236,6 @@ export class HomeComponent implements OnInit {
     this.username = this.authService.getUsername();
     this.token = this.authService.getToken();
     this.profile = await this.authService.getProfile();
-
-    // Sync user to backend database on login
-    await this.authService.syncUserToBackend();
   }
 
   async logout(): Promise<void> {
