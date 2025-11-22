@@ -1,0 +1,1 @@
+{"ast":null,"code":"export const environment = {\n  production: false,\n  keycloak: {\n    url: 'http://localhost:8081',\n    realm: 'payment-chat',\n    clientId: 'payment-chat-app'\n  },\n  apiUrl: 'http://localhost:8080/api'\n};","map":null,"metadata":{},"sourceType":"module","externalDependencies":[]}

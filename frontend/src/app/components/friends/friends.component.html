@@ -1,0 +1,144 @@
+<div class="friends-container">
+  <nav class="navbar">
+    <div class="nav-content">
+      <h1>💬 Payment Chat</h1>
+      <div class="user-info">
+        <span class="username">👤 {{ currentUsername }}</span>
+        <button class="btn-logout" (click)="logout()">Logout</button>
+      </div>
+    </div>
+  </nav>
+
+  <div class="content">
+    <div class="main-grid">
+      <!-- Left Sidebar: Friends List -->
+      <div class="friends-panel">
+        <div class="panel-header">
+          <h2>👥 Friends ({{ friends.length }})</h2>
+        </div>
+
+        <div class="friends-list" *ngIf="friends.length > 0; else noFriends">
+          <div
+            *ngFor="let friend of friends"
+            class="friend-item"
+            (click)="openChat(friend.id)"
+          >
+            <div class="friend-avatar">
+              <span>{{ friend.username.charAt(0).toUpperCase() }}</span>
+            </div>
+            <div class="friend-info">
+              <div class="friend-name">{{ friend.displayName || friend.username }}</div>
+              <div class="friend-username">&#64;{{ friend.username }}</div>
+            </div>
+            <div class="friend-status" [class.online]="friend.online">
+              <span class="status-dot"></span>
+              {{ friend.online ? 'Online' : 'Offline' }}
+            </div>
+          </div>
+        </div>
+
+        <ng-template #noFriends>
+          <div class="empty-state">
+            <p>😔 No friends yet</p>
+            <p class="hint">Search for users to add friends!</p>
+          </div>
+        </ng-template>
+      </div>
+
+      <!-- Right Panel: Add Friends & Requests -->
+      <div class="actions-panel">
+        <!-- Add Friend Section -->
+        <div class="card">
+          <h3>🔍 Add Friend</h3>
+          <div class="search-box">
+            <input
+              type="text"
+              [(ngModel)]="searchUsername"
+              (keyup.enter)="searchUser()"
+              placeholder="Enter username..."
+              class="search-input"
+            />
+            <button
+              (click)="searchUser()"
+              [disabled]="loading"
+              class="btn-primary"
+            >
+              Search
+            </button>
+          </div>
+
+          <div *ngIf="searchError" class="error-message">
+            {{ searchError }}
+          </div>
+
+          <div *ngIf="searchResult" class="search-result">
+            <div class="user-card">
+              <div class="user-avatar">
+                {{ searchResult.username.charAt(0).toUpperCase() }}
+              </div>
+              <div class="user-details">
+                <div class="user-name">{{ searchResult.displayName || searchResult.username }}</div>
+                <div class="user-email">{{ searchResult.email }}</div>
+                <div class="user-username">&#64;{{ searchResult.username }}</div>
+              </div>
+              <button
+                (click)="sendFriendRequest(searchResult.username)"
+                class="btn-add"
+                [disabled]="searchResult.username === currentUsername"
+              >
+                {{ searchResult.username === currentUsername ? 'You' : '+ Add Friend' }}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <!-- Pending Requests Section -->
+        <div class="card" *ngIf="pendingRequests.length > 0">
+          <h3>📬 Friend Requests ({{ pendingRequests.length }})</h3>
+          <div class="requests-list">
+            <div
+              *ngFor="let request of pendingRequests"
+              class="request-item"
+            >
+              <div class="request-avatar">
+                {{ request.requester.username.charAt(0).toUpperCase() }}
+              </div>
+              <div class="request-info">
+                <div class="request-name">{{ request.requester.displayName || request.requester.username }}</div>
+                <div class="request-username">&#64;{{ request.requester.username }}</div>
+              </div>
+              <div class="request-actions">
+                <button
+                  (click)="acceptRequest(request.id)"
+                  class="btn-accept"
+                >
+                  ✓ Accept
+                </button>
+                <button
+                  (click)="rejectRequest(request.id)"
+                  class="btn-reject"
+                >
+                  ✗ Reject
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- Instructions Card -->
+        <div class="card info-card">
+          <h3>💡 How to use</h3>
+          <ul>
+            <li>Search for users by their username</li>
+            <li>Send friend requests to connect</li>
+            <li>Accept or reject incoming requests</li>
+            <li>Click on a friend to start chatting</li>
+          </ul>
+          <p class="test-hint">
+            <strong>Test accounts:</strong> testuser, testuser2
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
